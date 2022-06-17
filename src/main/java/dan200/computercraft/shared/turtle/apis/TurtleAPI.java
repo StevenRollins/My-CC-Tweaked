@@ -17,7 +17,11 @@ import dan200.computercraft.core.tracking.TrackingField;
 import dan200.computercraft.shared.peripheral.generic.data.ItemData;
 import dan200.computercraft.shared.peripheral.generic.methods.InventoryMethods;
 import dan200.computercraft.shared.turtle.core.*;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.HashMap;
@@ -94,6 +98,22 @@ public class TurtleAPI implements ILuaAPI
     {
         environment.addTrackingChange( TrackingField.TURTLE_OPS );
         return turtle.executeCommand( command );
+    }
+    //get the block as string
+    @LuaFunction
+    public final Object getBlockType(){
+        // Get world direction from direction
+        InteractDirection d = InteractDirection.FORWARD;
+        Direction direction = d.toWorldDir( turtle );
+
+        // Check if thing in front is air or not
+        World world = turtle.getWorld();
+        BlockPos oldPosition = turtle.getPosition();
+        BlockPos newPosition = oldPosition.relative( direction );
+
+        BlockState state = world.getBlockState( newPosition );
+        Object result = state.getBlock().toString();
+        return result;
     }
 
     /**
